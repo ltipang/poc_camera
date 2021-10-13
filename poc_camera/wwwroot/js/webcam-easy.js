@@ -16,7 +16,7 @@ class Webcam {
     constructor(webcamElement, facingMode = 'user', canvasElement = null, snapSoundElement = null) {
       this._webcamElement = webcamElement;
         this._webcamElement.width = this._webcamElement.width || getWidth();
-        this._webcamElement.height = this._webcamElement.height || (getWidth() * 5 / 3);
+        this._webcamElement.height = this._webcamElement.height || (getWidth() * 4 / 3);
       this._facingMode = facingMode;
       this._webcamList = [];
       this._streamList = [];

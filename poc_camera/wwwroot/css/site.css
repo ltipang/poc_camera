@@ -52,21 +52,19 @@ body {
 .input-container {
     margin: 0 auto;
     max-width: 560px;
+    flex: 1;
     position: relative;
     transition: 300ms ease all;
-}
-
-@media (max-width: 640px) {
-    .input-container {
-        max-width: 330px
-    }
+    margin-right: 20px;
+    border: 2px solid var(--green);
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
 }
 
 .input-container__icon {
-    position: absolute;
-    right: 18px;
-    top: 50%;
-    transform: translateY(-50%);
+    margin-left: 12px;
+    margin-right: 12px;
 }
 
 @media (max-width: 640px) {
@@ -162,30 +160,46 @@ body {
     transition: 300ms ease all;
 }
 
-@media (max-width: 640px) {
-    .label {
-        font-size: 14px
-    }
-}
 
 .input {
-    border: 2px solid var(--green);
-    border-radius: 15px;
     color: var(--black);
     display: block;
-    font-size: 36px;
+    font-size: 24px;
     font-weight: 500;
     height: 80px;
-    margin-bottom: 46px;
-    padding: 0 28px;
-    width: 100%;
+    margin-left: 12px;
+    width: 100px;
+    flex: 1;
     text-transform: uppercase;
+    border: none;
 }
 
-@media (max-width: 992px) {
-    .input {
-        font-size: 24px;
+@media (max-width: 640px) {
+    .label {
+        font-size: 14px;
     }
+
+    .input {
+        font-size: 14px;
+    }
+}
+
+.input:focus-visible {
+    border: none;
+    outline: none;
+}
+
+input.input::placeholder {
+    opacity: 1;
+    color: var(--green);
+}
+
+input.input:-ms-input-placeholder {
+    color: var(--green);
+}
+
+input.input::-ms-input-placeholder {
+    color: var(--green);
 }
 
 @media (max-width: 640px) {
@@ -194,21 +208,10 @@ body {
     }
 }
 
-.input:focus + .label,
-.input.filled + .label {
-    font-size: 12px;
-    transform: translate(3px, -35px);
+.webcam-container {
+    position: relative;
+    flex: 1;
 }
-
-@media (max-width: 640px) {
-    .input:focus + .label,
-    .input.filled + .label {
-        /*transform: translate(3px, -24px);*/
-        display: none;
-    }
-}
-
-
 
 @media screen and (min-width: 768px) {
     .webcam-container {
@@ -331,6 +334,9 @@ body {
     width: 100vw;
     text-align: center;
     background-color: black;
+    display: flex;
+    position: relative;
+    justify-content: center;
 }
 
 #webcam {
@@ -338,10 +344,22 @@ body {
     z-index: 999;
     pointer-events: none;
     margin: auto;
-    -webkit-mask-image: url('../images/camera_mask.png');
-    mask-image: url('../images/camera_mask.png');
-    -webkit-mask-size: cover;
-    -webkit-mask-repeat: round;
+    object-fit: cover;
+    width: -webkit-fill-available;
+    height: -webkit-fill-available;
+}
+
+.webcam-overlay {
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-image: url(../images/camera_mask-1.png);
+    background-size: cover;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 1000;
 }
 
 .md-modal {

@@ -8,17 +8,16 @@
 <main id="webcam-app">
         <div class="webcam-start" id="webcam-control">
             <h2>Proof Of Concept</h2>
-            <div class="text-center">
-                <div class="input-container">
-                    <input class="input js-input" type="text" value="" id="text-searchvehicle">
-                    <label class="label"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Enter license plate or chassis number</font></font></label>
+            <div class="text-center" style="display: flex; align-items: center;">
+                <div class="input-container" >
+                    <input type="text" class="input" value="" id="text-searchvehicle" placeholder="Enter license plate or chassis number">
                     <div id="link-searchvehicle" class="pointer">
                         <img src="/images/magnify.svg" class="input-container__icon">
                     </div>
-                    <div id="link-cam" class="pointer">
-                        <!--<img src="~/images/cam.png" class="input-container__icon_right" onclick="location.href='@Url.Action("Index", "Camera")'">-->
-                        <img src="~/images/cam.png" class="input-container__icon_right" onclick="startCamera();">
-                    </div>
+                </div>
+                <div id="link-cam" class="pointer">
+                    <!--<img src="~/images/cam.png" class="input-container__icon_right" onclick="location.href='@Url.Action("Index", "Camera")'">-->
+                    <img src="~/images/cam.png" style="width: 56px;" onclick="startCamera();">
                 </div>
             </div>
         </div>
@@ -26,17 +25,18 @@
         <div class="md-modal md-effect-12">
             <div id="app-panel" class="app-panel md-content">
                 <div id="webcam-container" class="webcam-container col-12 d-none" >
-                    <video id="webcam" autoplay playsinline></video>
-                    <canvas id="canvas" class="d-none"></canvas>
+                    <div style="position: absolute; left: 0; right: 0; top: 0; bottom: 0; display: flex; justify-content: center;">
+                        <video id="webcam" autoplay playsinline></video>
+                        <!--<canvas id="canvas" class="d-none"></canvas>-->
+                    </div>
                     <div class="flash"></div>
                     <audio id="snapSound" src="audio/snap.wav" preload="auto"></audio>
-                    
                  </div>
-                <div id="cameraControls" class="cameraControls">
-                    
-                    <a href="#" id="exit-app" title="Exit App" class="d-none"><i class="material-icons">exit_to_app</i></a>
-                    <a href="#" id="take-photo" title="Take Photo"><i class="material-icons">camera_alt</i></a>
-                  
+                <div class="webcam-overlay">
+                    <div id="cameraControls" class="cameraControls">
+                        <a href="#" id="exit-app" title="Exit App" class="d-none" style="display: inline-block;"><i class="material-icons">exit_to_app</i></a>
+                        <a href="#" id="take-photo" title="Take Photo" style="display: inline-block;"><i class="material-icons">camera_alt</i></a>
+                    </div>
                 </div>
             </div>
         </div>

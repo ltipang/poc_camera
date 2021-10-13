@@ -34,6 +34,11 @@ const snapSoundElement = document.getElementById('snapSound');
 
 const webcam = new Webcam(webcamElement, 'enviroment', canvasElement, snapSoundElement);
 
+//var ctx = canvasElement.getContext('2d');
+
+//setInterval(function () {
+//    ctx.drawImage(webcamElement, 0, 0, 300, 550);
+ //   }, 20); 
 
 function startCamera() {
     $('.md-modal').addClass('md-show');
@@ -125,13 +130,6 @@ function removeCapture() {
     $('#download-photo').addClass('d-none');
     $('#resume-camera').addClass('d-none');
 }
-
-$("#resume-camera").click(function () {
-    webcam.stream()
-        .then(facingMode => {
-            removeCapture();
-        });
-});
 
 $("#exit-app").click(function () {
     removeCapture();
