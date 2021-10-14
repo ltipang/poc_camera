@@ -34,6 +34,20 @@ const snapSoundElement = document.getElementById('snapSound');
 
 const webcam = new Webcam(webcamElement, 'enviroment', canvasElement, snapSoundElement);
 
+var slider = document.getElementById("myRange");
+var zoom = 1.0;
+slider.oninput = function () {
+    zoom = 1.0 + (this.value - 50) / 50.0;
+
+    webcamElement.style['transform'] = 'scale( ' + zoom + ', ' + zoom + ')';
+}
+
+const img_width = 750.0
+const img_height = 1334.0
+const mask_x = 70 / img_width;
+const mask_y = 500 / img_height;
+const mask_w = 620 / img_width;
+const mask_h = 295 / img_height;
 //var ctx = canvasElement.getContext('2d');
 
 //setInterval(function () {
