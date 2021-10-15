@@ -36,8 +36,9 @@ const webcam = new Webcam(webcamElement, 'enviroment', canvasElement, snapSoundE
 
 var slider = document.getElementById("myRange");
 var zoom = 1.0;
+
 slider.oninput = function () {
-    zoom = 1.0 + (this.value - 50) / 50.0;
+    zoom = 1.0 + (this.value ) / 50.0;
 
     webcamElement.style['transform'] = 'scale( ' + zoom + ', ' + zoom + ')';
 }

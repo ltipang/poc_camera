@@ -26,8 +26,8 @@ function getHeight() {
 class Webcam {
     constructor(webcamElement, facingMode = 'user', canvasElement = null, snapSoundElement = null) {
       this._webcamElement = webcamElement;
-        this._webcamElement.width = this._webcamElement.width || getWidth();
-        this._webcamElement.height = this._webcamElement.height || (getWidth() * 4 / 3);
+      this._webcamElement.width = this._webcamElement.width || getWidth();
+      this._webcamElement.height = this._webcamElement.height || (getWidth() * 16 / 9);
       this._facingMode = facingMode;
       this._webcamList = [];
       this._streamList = [];
@@ -72,7 +72,18 @@ class Webcam {
 
     /* Get media constraints */
     getMediaConstraints() {
-        var videoConstraints = {};
+        var videoConstraints = {            
+            width: {
+                min: 1920,
+                ideal: 1920,
+                max: 2560,
+            },
+            height: {
+                min: 1080,
+                ideal: 1080,
+                max: 1440
+            }
+        };
         if (this._selectedDeviceId == '') {
             videoConstraints.facingMode =  this._facingMode;
         } else {
@@ -198,14 +209,11 @@ class Webcam {
         
           var ratio = screenWidth / videoWidth;
           var realVideoHeight = videoHeight * ratio;
-          var offset = (screenHeight - realVideoHeight) / 2;
-          var cx = screenWidth / 2;
-          var cy = realVideoHeight / 2;
-          var sx = videoWidth /2  - (0.5 - mask_x) * screenWidth / ratio;
-          var sy = (screenHeight * mask_y - offset) / ratio;
+          var sx = videoWidth / 2 - (0.5 - mask_x) * screenWidth / ratio / zoom;
+          var sy = videoHeight / 2 - (0.5 - mask_y) * screenHeight / ratio / zoom;
          
-          var sWidth = videoWidth * mask_w; // zoom;
-          var sHeight = screenHeight * mask_h / ratio;// / zoom;
+          var sWidth = videoWidth * mask_w / zoom;
+          var sHeight = screenHeight * mask_h / ratio / zoom;
           if (sy < 0) sy = 0;
 
           this._canvasElement.width = sWidth;
