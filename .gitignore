@@ -2,3 +2,4 @@
 poc_camera/bin/*
 .vs/*
 poc_camera/obj/*
+poc_camera/wwwroot/js/key.js
