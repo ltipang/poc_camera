@@ -24,7 +24,9 @@ else {
     //document.getElementById("link-cam").style.display = "none";
 }
 
+var apiKey = 'AIzaSyB-MazxIuAa1nJ4_oLeBmTKvRkYcr5_Grk';
 
+var CV_URL = 'https://vision.googleapis.com/v1/images:annotate?key=' + apiKey;
 
 const webcamElement = document.getElementById('webcam');
 
@@ -67,6 +69,10 @@ function startCamera() {
         });
 }
 
+function endCamera() {
+    $('.md-modal').removeClass('md-show');
+    
+}
 
 $('#cameraFlip').click(function () {
     webcam.flip();
@@ -108,32 +114,63 @@ function cameraStopped() {
 }
 
 
+/**
+ * Sends the given file contents to the Cloud Vision API and outputs the
+ * results.
+ */
+function sendFileToCloudVision(content) {
+    var type = "TEXT_DETECTION";
+
+    // Strip out the file prefix when you convert to json.
+    var request = {
+        requests: [{
+            image: {
+                content: content
+            },
+            features: [{
+                type: type,
+                maxResults: 200
+            }]
+        }]
+    };
+
+    $('#results').text('processing...');
+    $.post({
+        url: CV_URL,
+        data: JSON.stringify(request),
+        contentType: 'application/json'
+    }).fail(function (jqXHR, textStatus, errorThrown) {
+        $('#results').text('ERRORS: ' + textStatus + ' ' + errorThrown);
+    }).done(displayJSON);
+}
+
+/**
+ * Displays the results.
+ */
+function displayJSON(data) {
+    var contents = data['responses'][0]["fullTextAnnotation"]["text"];
+    // remove spaces
+    contents.replace(/\s+/g, '');
+    // remove'\n'
+    contents.replace('\n', '');
+
+    $('#results').text(contents);
+    $("#text-searchvehicle").val(contents);
+
+    endCamera();
+}
+
 $("#take-photo").click(function () {
-    beforeTakePhoto();
     let picture = webcam.snap();
-    document.querySelector('#download-photo').href = picture;
+    sendFileToCloudVision(picture.replace('data:image/png;base64,', ''));
+    //document.querySelector('#download-photo').href = picture;
     afterTakePhoto();
 });
 
-function beforeTakePhoto() {
-    $('.flash')
-        .show()
-        .animate({ opacity: 0.3 }, 500)
-        .fadeOut(500)
-        .css({ 'opacity': 0.7 });
-    window.scrollTo(0, 0);
-    $('#webcam-control').addClass('d-none');
-    $('#cameraControls').addClass('d-none');
-}
 
 function afterTakePhoto() {
     webcam.stop();
-    $('#canvas').removeClass('d-none');
-    $('#take-photo').addClass('d-none');
-    $('#exit-app').removeClass('d-none');
-    $('#download-photo').removeClass('d-none');
-    $('#resume-camera').removeClass('d-none');
-    $('#cameraControls').removeClass('d-none');
+
 }
 
 function removeCapture() {
