@@ -32,7 +32,8 @@ const canvasElement = document.getElementById('canvas');
 
 const snapSoundElement = document.getElementById('snapSound');
 
-const webcam = new Webcam(webcamElement, 'enviroment', canvasElement, snapSoundElement);
+//const webcam = new Webcam(webcamElement, 'enviroment', canvasElement, snapSoundElement);
+const webcam = new Webcam(webcamElement, 'user', canvasElement, snapSoundElement);
 
 var slider = document.getElementById("myRange");
 var zoom = 1.0;
@@ -186,4 +187,12 @@ $("#exit-app").click(function () {
     cameraStopped();
     webcam.stop();
     console.log("webcam stopped");
+});
+
+$("#cameraFlip").click(function () {
+    $('#cameraFlip').click(function () {
+        webcam.stop();
+        webcam.flip();
+        webcam.start();
+    });
 });

@@ -65,7 +65,7 @@ class Webcam {
         }
       });
       if(this._webcamList.length == 1){
-        this._facingMode = 'user';
+          this._facingMode = 'enviroment';
       }    
       return this._webcamList;
     }
@@ -73,15 +73,15 @@ class Webcam {
     /* Get media constraints */
     getMediaConstraints() {
         var videoConstraints = {            
-            width: {
-                min: 1920,
+           width: {
+                min: 1280,
                 ideal: 1920,
-                max: 2560,
+                max: 3940,
             },
             height: {
-                min: 1080,
+                min: 720,
                 ideal: 1080,
-                max: 1440
+                max: 2160
             }
         };
         if (this._selectedDeviceId == '') {
