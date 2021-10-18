@@ -23,8 +23,35 @@ function getHeight() {
 
     return xHeight;
 }
+
+/**
+ * Determine the mobile operating system.
+ * This function returns one of 'iOS', 'Android', 'Windows Phone', or 'unknown'.
+ *
+ * @returns {String}
+ */
+function getMobileOperatingSystem() {
+    var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+
+    // Windows Phone must come first because its UA also contains "Android"
+    if (/windows phone/i.test(userAgent)) {
+        return "Windows Phone";
+    }
+
+    if (/android/i.test(userAgent)) {
+        return "Android";
+    }
+
+    // iOS detection from: http://stackoverflow.com/a/9039885/177710
+    if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+        return "iOS";
+    }
+
+    return "unknown";
+}
+
 class Webcam {
-    constructor(webcamElement, facingMode = 'enviroment', canvasElement = null, snapSoundElement = null) {
+    constructor(webcamElement, facingMode = 'environment', canvasElement = null, snapSoundElement = null) {
         this._webcamElement = webcamElement;
         this._webcamElement.width = this._webcamElement.width || getWidth();
         this._webcamElement.height = this._webcamElement.height || (getWidth() * 16 / 9);
@@ -34,7 +61,8 @@ class Webcam {
         this._selectedDeviceId = '';
         this._canvasElement = canvasElement;
         this._snapSoundElement = snapSoundElement;
-        this._selectedNo = 1;
+        this._selectedNo = 0;
+        this._osType = getMobileOperatingSystem();
     }
 
     get facingMode(){
@@ -59,14 +87,28 @@ class Webcam {
 
     /* Get all video input devices info */
     getVideoInputs(mediaDevices){
-      this._webcamList = [];
+        this._webcamList = [];
+        var ind = 0;
       mediaDevices.forEach(mediaDevice => {
-        if (mediaDevice.kind === 'videoinput') {
-            this._webcamList.push(mediaDevice);          
-        }
+          if (mediaDevice.kind === 'videoinput') {
+              ind++;
+              if (this._osType === 'Android') {
+                  if (mediaDevice.label.toLowerCase().includes('back')) {
+                      this._webcamList.push(mediaDevice);
+                  }
+              }
+              else if (this._osType === 'iOS') {
+                  if (ind > 1) {
+                      this._webcamList.push(mediaDevice);
+                  }
+              }
+              else {
+                  this._webcamList.push(mediaDevice);          
+              }        
+          }
       });
       if(this._webcamList.length == 1){
-          this._facingMode = 'enviroment';
+          this._facingMode = 'environment';
       }    
       return this._webcamList;
     }
@@ -101,7 +143,11 @@ class Webcam {
     selectCamera() {
         if (this._webcamList.length == 0)
             return;
-        
+       /* var res = '';
+        this._webcamList.forEach(webcam => {
+            res += webcam.label;
+        });
+        $('#results').text(res);*/
         if (this._selectedNo >= this._webcamList.length)
             this._selectedNo = 0;
         this._selectedDeviceId = this._webcamList[this._selectedNo].deviceId;
@@ -111,7 +157,7 @@ class Webcam {
 
     /* Change Facing mode and selected camera */ 
     flip(){
-        this._facingMode = (this._facingMode == 'user') ? 'enviroment' : 'user';
+        this._facingMode = (this._facingMode == 'user') ? 'environment' : 'user';
         this._selectedNo += 1;
         this._webcamElement.style.transform = "";
         this.selectCamera();   //select camera based on facingMode
@@ -126,25 +172,26 @@ class Webcam {
     async start(startStream = true) {
       return new Promise((resolve, reject) => {         
           this.stop();
-          this.selectCamera();   //select camera based on facingMode
-        navigator.mediaDevices.getUserMedia(this.getMediaConstraints()) //get permisson from user
+            navigator.mediaDevices.getUserMedia(this.getMediaConstraints()) //get permisson from user
           .then(stream => {
             this._streamList.push(stream);
             this.info() //get all video input devices info
-              .then(webcams =>{
-                
-                if(startStream){
-                    this.stream()
-                        .then(facingMode =>{
-                            resolve(this._facingMode);
-                        })
-                        .catch(error => {
-                            reject(error);
-                        });
-                }else{
-                    resolve(this._selectedDeviceId);
-                }
-              }) 
+                .then(webcams => {
+                    if (this._webcamList.length > 0 && this._osType === 'iOS') this._selectedNo = this._webcamList.length - 1;
+                    //if (this._webcamList.length > 2 && this._osType === 'Android') this._selectedNo = this._webcamList.length - 2;
+                    this.selectCamera();   //select camera based on facingMode
+                    if(startStream){
+                        this.stream()
+                            .then(facingMode =>{
+                                resolve(this._facingMode);
+                            })
+                            .catch(error => {
+                                reject(error);
+                            });
+                    }else{
+                        resolve(this._selectedDeviceId);
+                    }
+                }) 
               .catch(error => {
                 reject(error);
               });

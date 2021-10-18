@@ -33,7 +33,7 @@ const canvasElement = document.getElementById('canvas');
 const snapSoundElement = document.getElementById('snapSound');
 
 //const webcam = new Webcam(webcamElement, 'enviroment', canvasElement, snapSoundElement);
-const webcam = new Webcam(webcamElement, 'enviroment', canvasElement, snapSoundElement);
+const webcam = new Webcam(webcamElement, 'environment', canvasElement, snapSoundElement);
 
 var slider = document.getElementById("myRange");
 var zoom = 1.0;
