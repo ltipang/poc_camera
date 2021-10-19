@@ -1,5 +1,9 @@
 ﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification\ 
 for details on configuring this project to bundle and minify static web assets. */
+:root {
+    --base: #2695f9;
+}
+
 body {
     padding-top: 50px;
     padding-bottom: 20px;
@@ -358,6 +362,10 @@ input.input::-ms-input-placeholder {
     top: 0;
     bottom: 0;
     z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
 }
 
 .md-modal {
@@ -446,12 +454,14 @@ input.input::-ms-input-placeholder {
 }
 
 .cameraControls {
-    position: absolute;
-    bottom: 10vh;
+    margin-top: auto;
+    margin-bottom: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     width: 100%;
     z-index: 99999;
     background: transparent;
-    opacity: 0.7;
     padding: 10px;
 }
 
@@ -567,4 +577,25 @@ input.input::-ms-input-placeholder {
     border-radius: 50%;
     background: #04AA6D;
     cursor: pointer;
+}
+
+.fill-default {
+    fill: rgba(255, 255, 255, 0.16);
+}
+
+.fill-base {
+    fill: var(--base);
+}
+
+.zoom-options-container {
+    padding: 4px;
+    border-radius: 40px;
+    background-color: rgba(255, 255, 255, 0.16);
+    margin-top: 32px;
+    display: flex; 
+    align-items: center;
+}
+
+.zoom-option {
+    height: 30px;
 }

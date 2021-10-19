@@ -35,19 +35,29 @@ const snapSoundElement = document.getElementById('snapSound');
 //const webcam = new Webcam(webcamElement, 'enviroment', canvasElement, snapSoundElement);
 const webcam = new Webcam(webcamElement, 'environment', canvasElement, snapSoundElement);
 
-var slider = document.getElementById("myRange");
+
 var zoom = 1.0;
 
-slider.oninput = function () {
-    zoom = 1.0 + (this.value ) / 50.0;
+//var slider = document.getElementById("myRange");
+//slider.oninput = function () {
+//    zoom = 1.0 + (this.value ) / 50.0;
 
+//    webcamElement.style['transform'] = 'scale( ' + zoom + ', ' + zoom + ')';
+//}
+
+$(".zoom-option").on('click', function () {
+    zoom = $(this).attr("data-zoom")*1;
     webcamElement.style['transform'] = 'scale( ' + zoom + ', ' + zoom + ')';
-}
+    $('.zoom-option .fill-base').removeClass('fill-base').addClass('fill-default');
+    $('.zoom-option text').attr('fill', '#000');
+    $(this).find(".fill-default").removeClass('fill-default').addClass('fill-base');
+    $(this).find('text').attr('fill', '#fff');
+})
 
 const img_width = 750.0
 const img_height = 1334.0
 const mask_x = 70 / img_width;
-const mask_y = 500 / img_height;
+const mask_y = 365 / img_height;
 const mask_w = 620 / img_width;
 const mask_h = 295 / img_height;
 //var ctx = canvasElement.getContext('2d');
@@ -147,14 +157,31 @@ function sendFileToCloudVision(content) {
  * Displays the results.
  */
 function displayJSON(data) {
-    var contents = data['responses'][0]["fullTextAnnotation"]["text"];
-    // split with new line and get one
+/*    var contents = data['responses'][0]["fullTextAnnotation"]["text"];
     contents = contents.split("\n")[0];
     // remove spaces
     contents = contents.replace(/\s+/g, '');
 
-    $('#results').text(contents);
-    $("#text-searchvehicle").val(contents);
+    $('#results').text(contents);*/
+    var max_height = 0;
+    var res = '';
+    for (var i = 1; i < data["responses"][0]["textAnnotations"].length; i++) {
+        var vertices = data["responses"][0]["textAnnotations"][i]['boundingPoly']['vertices'];
+        var hh = (vertices[2].y + vertices[3].y - vertices[0].y - vertices[1].y) / 2;
+        if (max_height < hh)
+            max_height = hh;
+    }
+    console.log("max height:" + max_height);
+    for (var i = 1; i < data["responses"][0]["textAnnotations"].length; i++) {
+        var vertices = data["responses"][0]["textAnnotations"][i]['boundingPoly']['vertices'];
+        var hh = (vertices[2].y + vertices[3].y - vertices[0].y - vertices[1].y) / 2;
+        if (hh > max_height / 2)
+            res += data["responses"][0]["textAnnotations"][i]['description'];
+    }
+    console.log("res:" + res);
+    $('#results').text(res);
+
+    $("#text-searchvehicle").val(res);
 
     endCamera();
 }
@@ -166,10 +193,9 @@ $("#take-photo").click(function () {
     afterTakePhoto();
 });
 
-
 function afterTakePhoto() {
     webcam.stop();
-
+    console.log("webcam stopped");
 }
 
 function removeCapture() {
