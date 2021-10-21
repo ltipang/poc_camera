@@ -24,6 +24,14 @@ function getHeight() {
     return xHeight;
 }
 
+const img_width = 1170.0; // 750.0
+const img_height = 2037.0; // 1334.0
+var mask_x = 103.0;// / img_width;
+var mask_y = 733.0; // / img_height;
+var mask_w = 960;// / img_width;
+var mask_h = 390; // / img_height;
+
+
 /**
  * Determine the mobile operating system.
  * This function returns one of 'iOS', 'Android', 'Windows Phone', or 'unknown'.
@@ -246,50 +254,81 @@ class Webcam {
     }
 
     snap() {
-      if(this._canvasElement!=null){
-        if(this._snapSoundElement!= null){
-          this._snapSoundElement.play();
-        }
+          if(this._canvasElement!=null){
+                if(this._snapSoundElement!= null){
+                  this._snapSoundElement.play();
+                }
           
-          var screenWidth = getWidth();
-          var screenHeight = getHeight();
-          var videoWidth = this._webcamElement.videoWidth;
-          var videoHeight = this._webcamElement.videoHeight;
+                var screenWidth = getWidth();
+                var screenHeight = getHeight();
+
+                // calculate mask //
+                var screenRatio = screenHeight / screenWidth;
+                if (screenRatio > img_height / img_width) {
+                    var szoom = screenHeight / img_height;
+                    mask_w *= szoom;
+                    mask_h *= szoom;
+                    mask_x *= szoom;
+                    mask_y *= szoom;
+                    var offset_x = (img_width * szoom - screenWidth)/2.0;
+                    mask_x = (mask_x - offset_x) / screenWidth;
+                    mask_w /= screenWidth;
+                    mask_y /= screenHeight;
+                    mask_h /= screenHeight;
+
+                }
+                else {
+                    var szoom = screenWidth / img_width;
+                    mask_w *= szoom;
+                    mask_h *= szoom;
+                    mask_x *= szoom;
+                    mask_y *= szoom;
+                    var offset_y = (img_height * szoom - screenHeight) / 2.0;
+                    mask_x /= screenWidth;
+                    mask_w /= screenWidth;
+                    mask_y = (mask_y - offset_y) / screenHeight;
+                    mask_h /= screenHeight;
+                }
+
+                //--------//
+
+                var videoWidth = this._webcamElement.videoWidth;
+                var videoHeight = this._webcamElement.videoHeight;
         
-          var ratio = screenWidth / videoWidth;
-          var realVideoHeight = videoHeight * ratio;
-          var sx = videoWidth / 2 - (0.5 - mask_x) * screenWidth / ratio / zoom;
-          var sy = videoHeight / 2 - (0.5 - mask_y) * screenHeight / ratio / zoom;
+                var ratio = screenWidth / videoWidth;
+                var realVideoHeight = videoHeight * ratio;
+                var sx = videoWidth / 2 - (0.5 - mask_x) * screenWidth / ratio / zoom;
+                var sy = videoHeight / 2 - (0.5 - mask_y) * screenHeight / ratio / zoom;
          
-          var sWidth = videoWidth * mask_w / zoom;
-          var sHeight = screenHeight * mask_h / ratio / zoom;
-          if (sy < 0) sy = 0;
+                var sWidth = videoWidth * mask_w / zoom;
+                var sHeight = screenHeight * mask_h / ratio / zoom;
+                if (sy < 0) sy = 0;
 
-          this._canvasElement.width = sWidth;
-          this._canvasElement.height = sHeight;
+                this._canvasElement.width = sWidth;
+                this._canvasElement.height = sHeight;
 
-        let context = this._canvasElement.getContext('2d');
-        if(this._facingMode == 'user'){
-          context.translate(this._canvasElement.width, 0);
-          context.scale(-1, 1);
-        }
+                let context = this._canvasElement.getContext('2d');
+                if(this._facingMode == 'user'){
+                    context.translate(this._canvasElement.width, 0);
+                    context.scale(-1, 1);
+                }
 
-        context.width = this._canvasElement.width;
-        context.height = this._canvasElement.height;
-        //context.clearRect(0, 0, this._canvasElement.width, this._canvasElement.height);
-        context.drawImage(this._webcamElement, sx, sy, sWidth, sHeight, 0, 0, context.width, context.height);
-        let cropped = this._canvasElement.toDataURL('image/png');
+                context.width = this._canvasElement.width;
+                context.height = this._canvasElement.height;
+                //context.clearRect(0, 0, this._canvasElement.width, this._canvasElement.height);
+                context.drawImage(this._webcamElement, sx, sy, sWidth, sHeight, 0, 0, context.width, context.height);
+                let cropped = this._canvasElement.toDataURL('image/png');
 
-          context.clearRect(0, 0, context.width, context.height);
-          this._canvasElement.width = videoWidth;
-          this._canvasElement.height = videoHeight;
-          context.drawImage(this._webcamElement, 0, 0, videoWidth, videoHeight, 0, 0, videoWidth, videoHeight);
-          let image = this._canvasElement.toDataURL('image/png');
+                context.clearRect(0, 0, context.width, context.height);
+                this._canvasElement.width = videoWidth;
+                this._canvasElement.height = videoHeight;
+                context.drawImage(this._webcamElement, 0, 0, videoWidth, videoHeight, 0, 0, videoWidth, videoHeight);
+                let image = this._canvasElement.toDataURL('image/png');
 
-          return { image, cropped };
-      }
-      else{
-        throw "canvas element is missing";
-      }
+                return { image, cropped };
+          }
+          else{
+            throw "canvas element is missing";
+          }
     } 
 }

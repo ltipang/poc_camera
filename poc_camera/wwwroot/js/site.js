@@ -54,12 +54,9 @@ $(".zoom-option").on('click', function () {
     $(this).find('text').attr('fill', '#fff');
 })
 
-const img_width = 1170; // 750.0
-const img_height = 2037; // 1334.0
-const mask_x = 105 / img_width;
-const mask_y = 735 / img_height;
-const mask_w = 960 / img_width;
-const mask_h = 390 / img_height;
+
+
+
 //var ctx = canvasElement.getContext('2d');
 
 //setInterval(function () {
