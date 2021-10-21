@@ -28,10 +28,39 @@ const img_width = 1170.0; // 750.0
 const img_height = 2037.0; // 1334.0
 var mask_x = 103.0;// / img_width;
 var mask_y = 733.0; // / img_height;
-var mask_w = 960;// / img_width;
-var mask_h = 390; // / img_height;
+var mask_w = 965;// / img_width;
+var mask_h = 395; // / img_height;
 
+var screenWidth = getWidth();
+var screenHeight = getHeight();
 
+// calculate mask //
+var screenRatio = screenHeight / screenWidth;
+if (screenRatio > img_height / img_width) {
+    var szoom = screenHeight / img_height;
+    mask_w *= szoom;
+    mask_h *= szoom;
+    mask_x *= szoom;
+    mask_y *= szoom;
+    var offset_x = (img_width * szoom - screenWidth) / 2.0;
+    mask_x = (mask_x - offset_x) / screenWidth;
+    mask_w /= screenWidth;
+    mask_y /= screenHeight;
+    mask_h /= screenHeight;
+
+}
+else {
+    var szoom = screenWidth / img_width;
+    mask_w *= szoom;
+    mask_h *= szoom;
+    mask_x *= szoom;
+    mask_y *= szoom;
+    var offset_y = (img_height * szoom - screenHeight) / 2.0;
+    mask_x /= screenWidth;
+    mask_w /= screenWidth;
+    mask_y = (mask_y - offset_y) / screenHeight;
+    mask_h /= screenHeight;
+}
 /**
  * Determine the mobile operating system.
  * This function returns one of 'iOS', 'Android', 'Windows Phone', or 'unknown'.
@@ -71,6 +100,8 @@ class Webcam {
         this._snapSoundElement = snapSoundElement;
         this._selectedNo = 0;
         this._osType = getMobileOperatingSystem();
+
+
     }
 
     get facingMode(){
@@ -259,38 +290,7 @@ class Webcam {
                   this._snapSoundElement.play();
                 }
           
-                var screenWidth = getWidth();
-                var screenHeight = getHeight();
-
-                // calculate mask //
-                var screenRatio = screenHeight / screenWidth;
-                if (screenRatio > img_height / img_width) {
-                    var szoom = screenHeight / img_height;
-                    mask_w *= szoom;
-                    mask_h *= szoom;
-                    mask_x *= szoom;
-                    mask_y *= szoom;
-                    var offset_x = (img_width * szoom - screenWidth)/2.0;
-                    mask_x = (mask_x - offset_x) / screenWidth;
-                    mask_w /= screenWidth;
-                    mask_y /= screenHeight;
-                    mask_h /= screenHeight;
-
-                }
-                else {
-                    var szoom = screenWidth / img_width;
-                    mask_w *= szoom;
-                    mask_h *= szoom;
-                    mask_x *= szoom;
-                    mask_y *= szoom;
-                    var offset_y = (img_height * szoom - screenHeight) / 2.0;
-                    mask_x /= screenWidth;
-                    mask_w /= screenWidth;
-                    mask_y = (mask_y - offset_y) / screenHeight;
-                    mask_h /= screenHeight;
-                }
-
-                //--------//
+                
 
                 var videoWidth = this._webcamElement.videoWidth;
                 var videoHeight = this._webcamElement.videoHeight;
