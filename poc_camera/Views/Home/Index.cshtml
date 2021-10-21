@@ -24,14 +24,13 @@
 
         <div class="md-modal md-effect-12">
             <div id="app-panel" class="app-panel md-content">
-                <div id="webcam-container" class="webcam-container col-12 d-none" >
-                    <div style="position: absolute; left: 0; right: 0; top: 0; bottom: 0; display: flex; justify-content: center;">
+                <div id="webcam-container" class="webcam-container col-12" >
+                    <div style="position: absolute; left: 0; right: 0; top: 0; bottom: 0; display: flex; justify-content: center; align-items: center;">
                         <video id="webcam" autoplay playsinline></video>
-                       
                     </div>
                     <div class="flash"></div>
                     <audio id="snapSound" src="audio/snap.wav" preload="auto"></audio>
-                 </div>
+                </div>
                 <div class="webcam-overlay">
                     <!--
                     <div class="slidecontainer">
@@ -80,10 +79,50 @@
                             </div>
 
                         </div>
+                        <canvas id="canvas" class="d-none" style="display: none;"></canvas>
                     </div>
-                    <canvas id="canvas" class="d-none" style="display: none;"></canvas>
                 </div>
             </div>
-        </div>
+            <div id="result-panel" class="app-panel md-content d-none">
+                <div class="webcam-container col-12">
+                    <div style="position: absolute; left: 0; right: 0; top: 0; bottom: 0; display: flex; justify-content: center; align-items: center;">
+                        <img id="screenshot" style="object-fit: contain;"/>
+                    </div>
+                </div>
+                <div class="result-overlay">
+                    <div id="loading">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="148.27" height="148.27" viewBox="0 0 148.27 148.27">
+                            <g transform="translate(-1 -1)">
+                                <path d="M36.174,1A7.174,7.174,0,0,0,29,8.174V32.089a7.174,7.174,0,1,0,14.349,0V8.174A7.174,7.174,0,0,0,36.174,1Z" transform="translate(38.961 0)" class="fill-base" style="animation-name: loading-1; animation-duration: 1s; animation-iteration-count: infinite;"/>
+                                <path d="M48.9,40.46a7.145,7.145,0,0,0,5.072-2.1l16.91-16.91A7.173,7.173,0,0,0,60.74,11.3L43.83,28.213A7.174,7.174,0,0,0,48.9,40.46Z" transform="translate(56.671 11.411)" class="fill-base" opacity="0.9" style="isolation: isolate; animation-name: loading-8; animation-duration: 1s; animation-iteration-count: infinite;"/>
+                                <path d="M78.089,29H54.174a7.174,7.174,0,1,0,0,14.349H78.089a7.174,7.174,0,0,0,0-14.349Z" transform="translate(64.007 38.961)" class="fill-base" opacity="0.8" style="isolation: isolate; animation-name: loading-7; animation-duration: 1s; animation-iteration-count: infinite;"/>
+                                <path d="M53.977,43.829A7.174,7.174,0,0,0,43.83,53.974l16.91,16.91A7.174,7.174,0,0,0,70.887,60.739Z" transform="translate(56.671 56.67)" class="fill-base" opacity="0.7" style="isolation: isolate; animation-name: loading-6; animation-duration: 1s; animation-iteration-count: infinite;"/>
+                                <path d="M36.174,47A7.174,7.174,0,0,0,29,54.174V78.089a7.174,7.174,0,0,0,14.349,0V54.174A7.174,7.174,0,0,0,36.174,47Z" transform="translate(38.961 64.007)" class="fill-base" opacity="0.6" style="isolation: isolate; animation-name: loading-5; animation-duration: 1s; animation-iteration-count: infinite;"/>
+                                <path d="M28.211,43.828,11.3,60.738A7.174,7.174,0,1,0,21.448,70.883l16.91-16.91A7.174,7.174,0,0,0,28.211,43.828Z" transform="translate(11.411 56.671)" class="fill-base" opacity="0.5" style="isolation: isolate; animation-name: loading-4; animation-duration: 1s; animation-iteration-count: infinite;"/>
+                                <path d="M39.263,36.174A7.174,7.174,0,0,0,32.089,29H8.174a7.174,7.174,0,1,0,0,14.349H32.089A7.174,7.174,0,0,0,39.263,36.174Z" transform="translate(0 38.961)" class="fill-base" opacity="0.4" style="isolation: isolate; animation-name: loading-3; animation-duration: 1s; animation-iteration-count: infinite;"/>
+                                <path d="M28.213,38.358A7.173,7.173,0,0,0,38.358,28.213L21.448,11.3A7.173,7.173,0,0,0,11.3,21.448Z" transform="translate(11.411 11.411)" class="fill-base" opacity="0.3" style="isolation: isolate; animation-name: loading-2; animation-duration: 1s; animation-iteration-count: infinite;"/>
+                            </g>
+                        </svg>
+                    </div>
+                    <div id="failed" class="d-none" style="flex-direction: column; align-items: center;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="46" height="46" viewBox="0 0 46 46">
+                            <g transform="translate(-456.182 -333.319)">
+                                <g>
+                                    <circle cx="22" cy="22" r="22" transform="translate(457.182 334.319)" fill="none" class="stroke-base" stroke-linecap="square" stroke-miterlimit="10" stroke-width="2" />
+                                </g>
+                                <g>
+                                    <g>
+                                        <path d="M477.447,367.1c.062-1.39.092-4.571.092-6.486v-1.462c0-1.7-.03-2.657-.092-3.892l-1.648-.278v-1.149l5.014-1.955.5.32-.092,4.328v4.088c0,1.915.031,5.1.092,6.486Zm5.118-1.262V367.1H476.04V365.84l2.559-.618h1.49Z" class="fill-base" />
+                                    </g>
+                                    <circle cx="2.608" cy="2.608" r="2.608" transform="translate(476.651 345.536)" class="fill-base" />
+                                </g>
+                            </g>
+                        </svg>
+                        <div style="font-size: 36px; font-weight: bold; color: white; margin-top: 20px;">Fejl i billedet</div>
+                        <div style="font-size: 18px; color: white; margin-top: 12px;">Der skete en fejl i processeringen af billedet, ingen nummerplade fundet.</div>
+                        <button class="btn btn-primary" style="margin-top: 54px; height: 60px; padding: 0 40px;" onclick="backToCamera();">TILBAGE TIL KAMERA</button>
+                    </div>
+                </div>
+            </div>
         <div class="md-overlay"></div>
 </main>

@@ -54,12 +54,12 @@ $(".zoom-option").on('click', function () {
     $(this).find('text').attr('fill', '#fff');
 })
 
-const img_width = 750.0
-const img_height = 1334.0
-const mask_x = 70 / img_width;
-const mask_y = 365 / img_height;
-const mask_w = 620 / img_width;
-const mask_h = 295 / img_height;
+const img_width = 1170; // 750.0
+const img_height = 2037; // 1334.0
+const mask_x = 105 / img_width;
+const mask_y = 735 / img_height;
+const mask_w = 960 / img_width;
+const mask_h = 390 / img_height;
 //var ctx = canvasElement.getContext('2d');
 
 //setInterval(function () {
@@ -68,6 +68,8 @@ const mask_h = 295 / img_height;
 
 function startCamera() {
     $('.md-modal').addClass('md-show');
+    $("#result-panel").addClass('d-none');
+    $("#app-panel").removeClass('d-none');
     webcam.start()
         .then(result => {
             cameraStarted();
@@ -149,10 +151,24 @@ function sendFileToCloudVision(content) {
         data: JSON.stringify(request),
         contentType: 'application/json'
     }).fail(function (jqXHR, textStatus, errorThrown) {
-        $('#results').text('ERRORS: ' + textStatus + ' ' + errorThrown);
+        //        $('#results').text('ERRORS: ' + textStatus + ' ' + errorThrown);
+        onFailedResult();
     }).done(displayJSON);
 }
 
+
+function backToCamera() {
+    $("#result-panel").addClass('d-none');
+    $("#app-panel").removeClass('d-none');
+    $("#failed").addClass('d-none');
+    $("#loading").removeClass('d-none');
+    startCamera();
+}
+
+function onFailedResult() {
+    $("#loading").addClass('d-none');
+    $("#failed").removeClass('d-none');
+}
 /**
  * Displays the results.
  */
@@ -163,6 +179,11 @@ function displayJSON(data) {
     contents = contents.replace(/\s+/g, '');
 
     $('#results').text(contents);*/
+    if (!data['responses'][0].textAnnotations) {
+        onFailedResult();
+        return;
+    }
+
     var max_height = 0;
     var res = '';
     for (var i = 1; i < data["responses"][0]["textAnnotations"].length; i++) {
@@ -178,17 +199,26 @@ function displayJSON(data) {
         if (hh > max_height / 2)
             res += data["responses"][0]["textAnnotations"][i]['description'];
     }
+
     console.log("res:" + res);
+    if (!res || !res.length) {
+        onFailedResult();
+        return;
+    }
+
     $('#results').text(res);
-
     $("#text-searchvehicle").val(res);
-
     endCamera();
 }
 
 $("#take-photo").click(function () {
-    let picture = webcam.snap();
-    sendFileToCloudVision(picture.replace('data:image/png;base64,', ''));
+    const { image, cropped } = webcam.snap();
+
+    $("#screenshot").attr('src', image).attr('width', getWidth() * zoom).attr('height', getHeight() * zoom);
+    $("#app-panel").addClass('d-none');
+    $("#result-panel").removeClass('d-none');
+
+    sendFileToCloudVision(cropped.replace('data:image/png;base64,', ''));
     //document.querySelector('#download-photo').href = picture;
     afterTakePhoto();
 });

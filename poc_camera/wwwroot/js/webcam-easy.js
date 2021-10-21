@@ -272,14 +272,21 @@ class Webcam {
         if(this._facingMode == 'user'){
           context.translate(this._canvasElement.width, 0);
           context.scale(-1, 1);
-          }
+        }
 
-          context.width = this._canvasElement.width;
-          context.height = this._canvasElement.height;
-          //context.clearRect(0, 0, this._canvasElement.width, this._canvasElement.height);
-          context.drawImage(this._webcamElement, sx, sy, sWidth, sHeight, 0, 0, context.width, context.height);
-        let data = this._canvasElement.toDataURL('image/png');
-        return data;
+        context.width = this._canvasElement.width;
+        context.height = this._canvasElement.height;
+        //context.clearRect(0, 0, this._canvasElement.width, this._canvasElement.height);
+        context.drawImage(this._webcamElement, sx, sy, sWidth, sHeight, 0, 0, context.width, context.height);
+        let cropped = this._canvasElement.toDataURL('image/png');
+
+          context.clearRect(0, 0, context.width, context.height);
+          this._canvasElement.width = videoWidth;
+          this._canvasElement.height = videoHeight;
+          context.drawImage(this._webcamElement, 0, 0, videoWidth, videoHeight, 0, 0, videoWidth, videoHeight);
+          let image = this._canvasElement.toDataURL('image/png');
+
+          return { image, cropped };
       }
       else{
         throw "canvas element is missing";
