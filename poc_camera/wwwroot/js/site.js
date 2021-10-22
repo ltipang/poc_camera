@@ -230,7 +230,6 @@ function removeCapture() {
     $('#webcam-control').removeClass('d-none');
     $('#cameraControls').removeClass('d-none');
     $('#take-photo').removeClass('d-none');
-    $('#exit-app').addClass('d-none');
     $('#download-photo').addClass('d-none');
     $('#resume-camera').addClass('d-none');
 }
