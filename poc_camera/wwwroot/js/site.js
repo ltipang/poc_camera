@@ -37,7 +37,7 @@ const webcam = new Webcam(webcamElement, 'environment', canvasElement, snapSound
 
 
 var zoom = 1.0;
-
+var lastTimeStamp = new Date().getTime();
 //var slider = document.getElementById("myRange");
 //slider.oninput = function () {
 //    zoom = 1.0 + (this.value ) / 50.0;
@@ -143,12 +143,14 @@ function sendFileToCloudVision(content) {
     };
 
     $('#results').text('processing...');
+    resetTimeStamp();
     $.post({
         url: CV_URL,
         data: JSON.stringify(request),
         contentType: 'application/json'
     }).fail(function (jqXHR, textStatus, errorThrown) {
         //        $('#results').text('ERRORS: ' + textStatus + ' ' + errorThrown);
+        logElaspedTime('Failed');
         onFailedResult();
     }).done(displayJSON);
 }
@@ -176,6 +178,8 @@ function displayJSON(data) {
     contents = contents.replace(/\s+/g, '');
 
     $('#results').text(contents);*/
+    logElaspedTime('Got Result');
+
     if (!data['responses'][0].textAnnotations) {
         onFailedResult();
         return;
@@ -208,8 +212,19 @@ function displayJSON(data) {
     endCamera();
 }
 
+function resetTimeStamp() {
+    lastTimeStamp = new Date().getTime();
+}
+
+function logElaspedTime(tag) {
+    console.log(tag, (new Date().getTime() - lastTimeStamp) / 1000);
+}
+
 $("#take-photo").click(function () {
+    resetTimeStamp();
     const { image, cropped } = webcam.snap();
+    logElaspedTime('Snapped');
+//    console.log(cropped);
 
     $("#screenshot").attr('src', image).attr('width', getWidth() * zoom).attr('height', getHeight() * zoom);
     $("#app-panel").addClass('d-none');
@@ -229,7 +244,7 @@ function removeCapture() {
     $('#canvas').addClass('d-none');
     $('#webcam-control').removeClass('d-none');
     $('#cameraControls').removeClass('d-none');
-    $('#take-photo').removeClass('d-none');
+    $('#take-photo').removeClass('d-none');+
     $('#download-photo').addClass('d-none');
     $('#resume-camera').addClass('d-none');
 }

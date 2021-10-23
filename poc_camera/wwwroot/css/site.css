@@ -348,8 +348,8 @@ input.input::-ms-input-placeholder {
 
 
 .app-panel {
-    height: 100vh;
-    width: 100vw;
+    height: 100%;
+    width: 100%;
     text-align: center;
     background-color: black;
     display: flex;
@@ -403,8 +403,8 @@ input.input::-ms-input-placeholder {
     top: 0;
     left: 0;
     right: 0;
+    bottom: 0;
     width: 100vw;
-    height: 100vh;
     z-index: 2000;
     visibility: hidden;
     -webkit-backface-visibility: hidden;

@@ -298,14 +298,14 @@ class Webcam {
                 var ratio = screenWidth / videoWidth;
                 var realVideoHeight = videoHeight * ratio;
                 var sx = videoWidth / 2 - (0.5 - mask_x) * screenWidth / ratio / zoom;
-                var sy = videoHeight / 2 - (0.5 - mask_y) * screenHeight / ratio / zoom;
+                var sy = videoHeight / 2 - (0.5 - mask_y) * screenHeight / ratio / zoom - 10;
          
                 var sWidth = videoWidth * mask_w / zoom;
-                var sHeight = screenHeight * mask_h / ratio / zoom;
+                var sHeight = screenHeight * mask_h / ratio / zoom + 20;
                 if (sy < 0) sy = 0;
 
-                this._canvasElement.width = sWidth;
-                this._canvasElement.height = sHeight;
+                this._canvasElement.width = 320;
+                this._canvasElement.height = 130;
 
                 let context = this._canvasElement.getContext('2d');
                 if(this._facingMode == 'user'){
