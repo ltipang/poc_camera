@@ -226,7 +226,7 @@ $("#take-photo").click(function () {
     logElaspedTime('Snapped');
 //    console.log(cropped);
 
-    $("#screenshot").attr('src', image).attr('width', getWidth() * zoom).attr('height', getHeight() * zoom);
+    $("#screenshot").attr('src', image).attr('width', getWidth()).attr('height', getHeight()).css('transform', 'scale(' + zoom + ', ' + zoom + ')');
     $("#app-panel").addClass('d-none');
     $("#result-panel").removeClass('d-none');
 
@@ -244,7 +244,7 @@ function removeCapture() {
     $('#canvas').addClass('d-none');
     $('#webcam-control').removeClass('d-none');
     $('#cameraControls').removeClass('d-none');
-    $('#take-photo').removeClass('d-none');+
+    $('#take-photo').removeClass('d-none');
     $('#download-photo').addClass('d-none');
     $('#resume-camera').addClass('d-none');
 }
