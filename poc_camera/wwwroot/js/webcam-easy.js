@@ -286,12 +286,6 @@ class Webcam {
 
     snap() {
           if(this._canvasElement!=null){
-                /*if(this._snapSoundElement!= null){
-                  this._snapSoundElement.play();
-                }*/
-          
-                
-
                 var videoWidth = this._webcamElement.videoWidth;
                   var videoHeight = this._webcamElement.videoHeight;
                   var sx = 0; 
@@ -334,14 +328,6 @@ class Webcam {
                 context.drawImage(this._webcamElement, sx, sy, sWidth, sHeight, 0, 0, context.width, context.height);
                 let cropped = this._canvasElement.toDataURL('image/png');
 
-                /*context.clearRect(0, 0, context.width, context.height);
-                this._canvasElement.width = videoWidth;
-                this._canvasElement.height = videoHeight;
-                context.drawImage(this._webcamElement, 0, 0, videoWidth, videoHeight, 0, 0, videoWidth, videoHeight);
-                let image = this._canvasElement.toDataURL('image/png');
-               
-                return { image, cropped };
-                 */
                 return cropped;
           }
           else{

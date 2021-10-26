@@ -224,7 +224,6 @@ $("#take-photo").click(function () {
     resetTimeStamp();
     var cropped = webcam.snap();  
     logElaspedTime('Snapped');
-//    console.log(cropped);
 
     sendFileToCloudVision(cropped.replace('data:image/png;base64,', ''));
 
@@ -232,7 +231,6 @@ $("#take-photo").click(function () {
     $("#screenshot").attr('src', image).attr('width', getWidth()).attr('height', getHeight()).css('transform', 'scale(' + zoom + ', ' + zoom + ')');
     $("#app-panel").addClass('d-none');
     $("#result-panel").removeClass('d-none');
-    //document.querySelector('#download-photo').href = picture;
     afterTakePhoto();
 });
 
