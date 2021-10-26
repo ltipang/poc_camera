@@ -30,10 +30,9 @@ const webcamElement = document.getElementById('webcam');
 
 const canvasElement = document.getElementById('canvas');
 
-const snapSoundElement = document.getElementById('snapSound');
 
 //const webcam = new Webcam(webcamElement, 'enviroment', canvasElement, snapSoundElement);
-const webcam = new Webcam(webcamElement, 'environment', canvasElement, snapSoundElement);
+const webcam = new Webcam(webcamElement, 'environment', canvasElement);
 
 
 var zoom = 1.0;

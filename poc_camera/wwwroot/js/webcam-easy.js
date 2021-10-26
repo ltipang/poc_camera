@@ -97,7 +97,6 @@ class Webcam {
         this._streamList = [];
         this._selectedDeviceId = '';
         this._canvasElement = canvasElement;
-        this._snapSoundElement = snapSoundElement;
         this._selectedNo = 0;
         this._osType = getMobileOperatingSystem();
 
@@ -337,9 +336,7 @@ class Webcam {
 
     snapCapture() {
         if (this._canvasElement != null) {
-            if(this._snapSoundElement!= null){
-              this._snapSoundElement.play();
-            }
+           
 
             var videoWidth = this._webcamElement.videoWidth;
             var videoHeight = this._webcamElement.videoHeight;
