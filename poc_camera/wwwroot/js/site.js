@@ -222,15 +222,16 @@ function logElaspedTime(tag) {
 
 $("#take-photo").click(function () {
     resetTimeStamp();
-    const { image, cropped } = webcam.snap();
+    var cropped = webcam.snap();  
     logElaspedTime('Snapped');
 //    console.log(cropped);
 
+    sendFileToCloudVision(cropped.replace('data:image/png;base64,', ''));
+
+    var image = webcam.snapCapture();
     $("#screenshot").attr('src', image).attr('width', getWidth()).attr('height', getHeight()).css('transform', 'scale(' + zoom + ', ' + zoom + ')');
     $("#app-panel").addClass('d-none');
     $("#result-panel").removeClass('d-none');
-
-    sendFileToCloudVision(cropped.replace('data:image/png;base64,', ''));
     //document.querySelector('#download-photo').href = picture;
     afterTakePhoto();
 });

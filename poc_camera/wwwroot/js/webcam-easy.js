@@ -286,26 +286,41 @@ class Webcam {
 
     snap() {
           if(this._canvasElement!=null){
-                if(this._snapSoundElement!= null){
+                /*if(this._snapSoundElement!= null){
                   this._snapSoundElement.play();
-                }
+                }*/
           
                 
 
                 var videoWidth = this._webcamElement.videoWidth;
-                var videoHeight = this._webcamElement.videoHeight;
-        
-                var ratio = screenWidth / videoWidth;
-                var realVideoHeight = videoHeight * ratio;
-                var sx = videoWidth / 2 - (0.5 - mask_x) * screenWidth / ratio / zoom;
-                var sy = videoHeight / 2 - (0.5 - mask_y) * screenHeight / ratio / zoom;
-         
-                var sWidth = videoWidth * mask_w / zoom;
-                var sHeight = screenHeight * mask_h / ratio / zoom;
-                if (sy < 0) sy = 0;
+                  var videoHeight = this._webcamElement.videoHeight;
+                  var sx = 0; 
+                  var sy = 0;
+                  var sWidth = 1;
+                  var sHeight = 1;
 
-                this._canvasElement.width = 320;
-                this._canvasElement.height = 130;
+                  if (screenRatio > videoHeight / videoWidth) {
+                      var ratio = screenWidth / videoWidth;
+                      sx = videoWidth / 2 - (0.5 - mask_x) * screenWidth / ratio / zoom;
+                      sy = videoHeight / 2 - (0.5 - mask_y) * screenHeight / ratio / zoom;
+
+                      sWidth = videoWidth * mask_w / zoom;
+                      sHeight = screenHeight * mask_h / ratio / zoom;
+                      if (sy < 0) sy = 0;
+                  }
+                  else {
+                      var ratio = screenHeight / videoHeight;
+                      sx = videoWidth / 2 - (0.5 - mask_x) * screenWidth / ratio / zoom;
+                      sy = videoHeight / 2 - (0.5 - mask_y) * screenHeight / ratio / zoom;
+
+                      sWidth = screenWidth * mask_w / ratio/ zoom;
+                      sHeight = videoHeight * mask_h / zoom;
+                      if (sy < 0) sy = 0;
+                  }
+               
+
+                this._canvasElement.width = 480; //sWidth;
+                this._canvasElement.height = sHeight * 480 / sWidth;
 
                 let context = this._canvasElement.getContext('2d');
                 if(this._facingMode == 'user'){
@@ -319,16 +334,49 @@ class Webcam {
                 context.drawImage(this._webcamElement, sx, sy, sWidth, sHeight, 0, 0, context.width, context.height);
                 let cropped = this._canvasElement.toDataURL('image/png');
 
-                context.clearRect(0, 0, context.width, context.height);
+                /*context.clearRect(0, 0, context.width, context.height);
                 this._canvasElement.width = videoWidth;
                 this._canvasElement.height = videoHeight;
                 context.drawImage(this._webcamElement, 0, 0, videoWidth, videoHeight, 0, 0, videoWidth, videoHeight);
                 let image = this._canvasElement.toDataURL('image/png');
-
+               
                 return { image, cropped };
+                 */
+                return cropped;
           }
           else{
             throw "canvas element is missing";
           }
+    } 
+
+    snapCapture() {
+        if (this._canvasElement != null) {
+            if(this._snapSoundElement!= null){
+              this._snapSoundElement.play();
+            }
+
+            var videoWidth = this._webcamElement.videoWidth;
+            var videoHeight = this._webcamElement.videoHeight;
+
+        
+            let context = this._canvasElement.getContext('2d');
+            if (this._facingMode == 'user') {
+                context.translate(this._canvasElement.width, 0);
+                context.scale(-1, 1);
+            }
+
+           
+            context.clearRect(0, 0, context.width, context.height);
+            this._canvasElement.width = videoWidth;
+            this._canvasElement.height = videoHeight;
+            context.drawImage(this._webcamElement, 0, 0, videoWidth, videoHeight, 0, 0, videoWidth, videoHeight);
+            let image = this._canvasElement.toDataURL('image/png');
+           
+            return image;
+            
+        }
+        else {
+            throw "canvas element is missing";
+        }
     } 
 }
