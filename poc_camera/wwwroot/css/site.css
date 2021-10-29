@@ -26,32 +26,6 @@ body {
     padding-right: 15px;
 }
 
-/* Carousel */
-.carousel-caption p {
-    font-size: 20px;
-    line-height: 1.4;
-}
-
-/* Make .svg files in the carousel display properly in older browsers */
-.carousel-inner .item img[src$=".svg"] {
-    width: 100%;
-}
-
-/* QR code generator */
-#qrCode {
-    margin: 15px;
-}
-
-/* Hide/rearrange for smaller screens */
-@media screen and (max-width: 767px) {
-    /* Hide captions */
-    .carousel-caption {
-        display: none;
-    }
-}
-
-
-
 .input-container {
     margin: 0 auto;
     max-width: 560px;
@@ -96,9 +70,9 @@ body {
     width: 100%;
 }
 
-    .input-container--header.filled {
-        max-width: 594px
-    }
+.input-container--header.filled {
+    max-width: 594px
+}
 
 @media (max-width: 992px) {
     .input-container--header {
@@ -237,115 +211,6 @@ input.input::-ms-input-placeholder {
     }
 }
 
-.form-control.webcam-start {
-    position: relative;
-    
-    opacity: 0.8;
-    padding: 10px 20px;
-    border: none;
-    color: white;
-    text-shadow: 1px 1px #000;
-    font-size: 1.2rem;
-    z-index: 9999;
-    top: 45%;
-    left: 0;
-    right: 0;
-    margin: auto;
-}
-
-.form-control.webcam-on {
-    position: fixed;
-    top: 10vh;
-    bottom: auto;
-    left: 0px;
-    right: auto;
-    transition: all 100ms;
-    width: 145px !important;
-}
-
-.form-control.webcam-off {
-    transition: all 100ms;
-}
-
-
-.form-switch {
-    display: inline-block;
-    cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
-}
-
-    .form-switch i {
-        position: relative;
-        display: inline-block;
-        margin-right: .5rem;
-        width: 60px;
-        height: 30px;
-        background-color: #e6e6e6;
-        border-radius: 25px;
-        vertical-align: text-bottom;
-        transition: all 0.3s linear;
-    }
-
-        .form-switch i::before {
-            content: "";
-            position: absolute;
-            left: 0;
-            width: 56px;
-            height: 25px;
-            background-color: #fff;
-            border-radius: 15px;
-            transform: translate3d(2px, 2px, 0) scale3d(1, 1, 1);
-            transition: all 0.25s linear;
-        }
-
-        .form-switch i::after {
-            content: "";
-            position: absolute;
-            left: 0;
-            width: 26px;
-            height: 26px;
-            background-color: #fff;
-            border: 1px solid grey;
-            border-radius: 15px;
-            box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.25);
-            transform: translate3d(2px, 2px, 0);
-            transition: all 0.2s ease-in-out;
-        }
-
-    .form-switch:active i::after {
-        width: 60px;
-        transform: translate3d(2px, 2px, 0);
-    }
-
-    .form-switch:active input:checked + i::after {
-        transform: translate3d(16px, 2px, 0);
-    }
-
-    .form-switch input {
-        display: none;
-    }
-
-        .form-switch input:checked + i {
-            background-color: #4BD763;
-        }
-
-            .form-switch input:checked + i::before {
-                transform: translate3d(18px, 2px, 0) scale3d(0, 0, 0);
-            }
-
-            .form-switch input:checked + i::after {
-                transform: translate3d(30px, 2px, 0);
-            }
-
-        .form-switch input:disabled + i {
-            background-color: #eeeeee;
-            cursor: not-allowed;
-        }
-
-            .form-switch input:disabled + i::after {
-                box-shadow: 0 2px 2px rgba(0, 0, 0, 0.10);
-            }
-
 
 .app-panel {
     height: 100%;
@@ -464,23 +329,6 @@ input.input::-ms-input-placeholder {
     opacity: 1;
 }
 
-#errorMsg {
-    position: fixed;
-    top: 22vh;
-    left: 0;
-    padding: 20px;
-    z-index: 999999;
-}
-
-@media screen and (min-width: 768px) {
-    #errorMsg {
-        position: fixed;
-        top: 32vh;
-        left: 20vw;
-        padding: 20px;
-        z-index: 999999;
-    }
-}
 
 .cameraControls {
     margin-top: auto;

@@ -1,8 +1,4 @@
-﻿// Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
-
-// Write your JavaScript code.
-
+﻿
 function detectWebcam(callback) {
     let md = navigator.mediaDevices;
     if (!md || !md.enumerateDevices) return callback(false);
@@ -13,36 +9,19 @@ function detectWebcam(callback) {
 
 detectWebcam(function (hasWebcam) {
     if (!hasWebcam) {
-       document.getElementById("link-cam").style.display = "none";
+        document.getElementById("link-cam").style.display = "none";
     }
 });
 
-if ('mediaDevices' in navigator && 'getUserMedia' in navigator.mediaDevices) {
-    console.log("Let's get this party started")
-}
-else {
-    //document.getElementById("link-cam").style.display = "none";
-}
 
 var CV_URL = 'https://vision.googleapis.com/v1/images:annotate?key=' + window.apiKey;
 
 const webcamElement = document.getElementById('webcam');
-
 const canvasElement = document.getElementById('canvas');
-
-
-//const webcam = new Webcam(webcamElement, 'enviroment', canvasElement, snapSoundElement);
 const webcam = new Webcam(webcamElement, 'environment', canvasElement);
-
 
 var zoom = 1.0;
 var lastTimeStamp = new Date().getTime();
-//var slider = document.getElementById("myRange");
-//slider.oninput = function () {
-//    zoom = 1.0 + (this.value ) / 50.0;
-
-//    webcamElement.style['transform'] = 'scale( ' + zoom + ', ' + zoom + ')';
-//}
 
 $(".zoom-option").on('click', function () {
     zoom = $(this).attr("data-zoom")*1;
@@ -52,15 +31,6 @@ $(".zoom-option").on('click', function () {
     $(this).find(".fill-default").removeClass('fill-default').addClass('fill-base');
     $(this).find('text').attr('fill', '#fff');
 })
-
-
-
-
-//var ctx = canvasElement.getContext('2d');
-
-//setInterval(function () {
-//    ctx.drawImage(webcamElement, 0, 0, 300, 550);
- //   }, 20); 
 
 function startCamera() {
     $('.md-modal').addClass('md-show');
@@ -72,54 +42,26 @@ function startCamera() {
             console.log("webcam started");
         })
         .catch(err => {
-            displayError();
+            console.log("webcam error");
         });
 }
 
 function endCamera() {
-    $('.md-modal').removeClass('md-show');
-    
+    $('.md-modal').removeClass('md-show');   
 }
 
-$('#cameraFlip').click(function () {
-    webcam.flip();
-    webcam.start();
-});
-
-
-function displayError(err = '') {
-    if (err != '') {
-        $("#errorMsg").html(err);
-    }
-    $("#errorMsg").removeClass("d-none");
-}
 
 function cameraStarted() {
-    $("#errorMsg").addClass("d-none");
     $('.flash').hide();
-    $("#webcam-caption").html("on");
-    $("#webcam-control").removeClass("webcam-off");
-    $("#webcam-control").addClass("webcam-on");
     $(".webcam-container").removeClass("d-none");
-    if (webcam.webcamList.length > 1) {
-        $("#cameraFlip").removeClass('d-none');
-    }
-    $("#wpfront-scroll-top-container").addClass("d-none");
     window.scrollTo(0, 0);
     $('body').css('overflow-y', 'hidden');
 }
 
 function cameraStopped() {
-    $("#errorMsg").addClass("d-none");
-    $("#wpfront-scroll-top-container").removeClass("d-none");
-    $("#webcam-control").removeClass("webcam-on");
-    $("#webcam-control").addClass("webcam-off");
-    $("#cameraFlip").addClass('d-none');
     $(".webcam-container").addClass("d-none");
-    $("#webcam-caption").html("Click to Start Camera");
     $('.md-modal').removeClass('md-show');
 }
-
 
 /**
  * Sends the given file contents to the Cloud Vision API and outputs the
@@ -141,14 +83,12 @@ function sendFileToCloudVision(content) {
         }]
     };
 
-    $('#results').text('processing...');
     resetTimeStamp();
     $.post({
         url: CV_URL,
         data: JSON.stringify(request),
         contentType: 'application/json'
     }).fail(function (jqXHR, textStatus, errorThrown) {
-        //        $('#results').text('ERRORS: ' + textStatus + ' ' + errorThrown);
         logElaspedTime('Failed');
         onFailedResult();
     }).done(displayJSON);
@@ -167,16 +107,13 @@ function onFailedResult() {
     $("#loading").addClass('d-none');
     $("#failed").removeClass('d-none');
 }
+
+
 /**
  * Displays the results.
  */
 function displayJSON(data) {
-/*    var contents = data['responses'][0]["fullTextAnnotation"]["text"];
-    contents = contents.split("\n")[0];
-    // remove spaces
-    contents = contents.replace(/\s+/g, '');
 
-    $('#results').text(contents);*/
     logElaspedTime('Got Result');
 
     if (!data['responses'][0].textAnnotations) {
@@ -205,8 +142,6 @@ function displayJSON(data) {
         onFailedResult();
         return;
     }
-
-    $('#results').text(res);
     $("#text-searchvehicle").val(res);
     endCamera();
 }
@@ -221,7 +156,7 @@ function logElaspedTime(tag) {
 
 $("#take-photo").click(function () {
     resetTimeStamp();
-    var cropped = webcam.snap();  
+    var cropped = webcam.getPlateImage();  
     logElaspedTime('Snapped');
 
     sendFileToCloudVision(cropped.replace('data:image/png;base64,', ''));
@@ -243,8 +178,6 @@ function removeCapture() {
     $('#webcam-control').removeClass('d-none');
     $('#cameraControls').removeClass('d-none');
     $('#take-photo').removeClass('d-none');
-    $('#download-photo').addClass('d-none');
-    $('#resume-camera').addClass('d-none');
 }
 
 $("#exit-app").click(function () {
