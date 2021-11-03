@@ -137,9 +137,9 @@ class Webcam {
                     }
                 }
                 else if (this._osType === 'iOS') {
-                    if (ind > 1) {
+                    //if (ind > 1) {
                         this._webcamList.push(mediaDevice);
-                    }
+                   // }
                 }
                 else
                 {
@@ -157,12 +157,12 @@ class Webcam {
     getMediaConstraints() {
         var videoConstraints = {            
            width: {
-                min: 1280,
+                min: 1920,
                 ideal: 1920,
                 max: 3940,
             },
             height: {
-                min: 720,
+                min: 1080,
                 ideal: 1080,
                 max: 2160
             }
@@ -295,7 +295,8 @@ class Webcam {
 
                 sWidth = videoWidth * mask_w / zoom;
                 sHeight = screenHeight * mask_h / ratio / zoom;
-                if (sy < 0) sy = 0;
+                if (sy < 0) sy = 1;
+                if (sx < 0) sx = 1;
             }
             else {
                 var ratio = screenHeight / videoHeight;
@@ -304,9 +305,13 @@ class Webcam {
 
                 sWidth = screenWidth * mask_w / ratio/ zoom;
                 sHeight = videoHeight * mask_h / zoom;
-                if (sy < 0) sy = 0;
+                if (sy < 0) sy = 1;
+                if (sx < 0) sx = 1;
             }
-               
+
+            sWidth = Math.min(sWidth, videoWidth - sx);
+            sHeight = Math.min(sHeight, videoHeight - sy);
+
             this._canvasElement.width = 480; //sWidth;
             this._canvasElement.height = sHeight * 480 / sWidth;
 
