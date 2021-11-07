@@ -126,20 +126,19 @@ class Webcam {
 
     /* Get all video input devices info */
     getVideoInputs(mediaDevices){
-        this._webcamList = [];
-        var ind = 0;
+        this._webcamList = [];    
         mediaDevices.forEach(mediaDevice => {
             if (mediaDevice.kind === 'videoinput') {
-                ind++;
+
                 if (this._osType === 'Android') {
                     if (mediaDevice.label.toLowerCase().includes('back')) {
                         this._webcamList.push(mediaDevice);
                     }
                 }
                 else if (this._osType === 'iOS') {
-                    //if (ind > 1) {
+                    if (mediaDevice.label.toLowerCase().includes('back') || mediaDevice.label.toLowerCase().includes('bagside')) {
                         this._webcamList.push(mediaDevice);
-                   // }
+                    }
                 }
                 else
                 {
@@ -157,14 +156,10 @@ class Webcam {
     getMediaConstraints() {
         var videoConstraints = {            
            width: {
-                min: 1920,
                 ideal: 1920,
-                max: 3940,
             },
             height: {
-                min: 1080,
                 ideal: 1080,
-                max: 2160
             }
         };
         if (this._selectedDeviceId == '') {

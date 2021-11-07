@@ -3,7 +3,7 @@ function detectWebcam(callback) {
     let md = navigator.mediaDevices;
     if (!md || !md.enumerateDevices) return callback(false);
     md.enumerateDevices().then(devices => {
-        callback(true);//devices.some(device => 'videoinput' === device.kind));
+        callback(true);
     })
 }
 
